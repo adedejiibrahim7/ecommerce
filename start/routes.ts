@@ -20,6 +20,7 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 import '../start/routes/auth'
+import '../start/routes/users'
 import '../start/routes/products'
 import '../start/routes/category'
 import '../start/routes/subCategories'

@@ -1,7 +1,7 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
-  Route.post('/', 'CategoriesController.index').middleware('auth')
+  Route.get('/', 'CategoriesController.index').middleware('auth')
   Route.get('/mine', 'CategoriesController.myCategories').middleware('auth')
   Route.get('/:id', 'CategoriesController.get').middleware('auth')
   Route.delete('/:id', 'CategoriesController.delete').middleware('auth')

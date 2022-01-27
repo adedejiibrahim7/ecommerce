@@ -10,14 +10,21 @@ export default class ProductsController {
                 title: schema.string({ trim: true }, [rules.minLength(2)]),
                 description: schema.string({ trim: true }, [rules.minLength(2)]),
                 price: schema.number([rules.unsigned()]),
-                product_category_id: schema.number([rules.unsigned()]),
-                product_sub_category_id: schema.number([rules.unsigned()]),
+                product_category_id: schema.number([rules.unsigned(), rules.exists({table: 'categories', column: 'id'})]),
+                product_sub_category_id: schema.number([rules.unsigned(), rules.exists({table: 'sub_categories', column: 'id'})]),
                 
             })
         })
 
         try{
-            const product = Product.create(data)
+            const product = await Product.create({
+                title: data.title,
+                description: data.description,
+                price: data.price,
+                product_category_id: data.product_category_id,
+                product_sub_category_id: data.product_sub_category_id,
+                user_id: auth.user?.id
+            })
 
             return response.status(201).json({
                 status: "success",
@@ -38,7 +45,7 @@ export default class ProductsController {
 
     public async  index({request, response, auth}: HttpContextContract){
         try{
-            const products = Product.all()
+            const products = await Product.all()
 
             return response.json({
                 status: "success",
@@ -58,7 +65,8 @@ export default class ProductsController {
 
     public async myProducts({request, response, auth}: HttpContextContract){
         try{
-            const products = Product.findBy('user_id', auth.user!.id)
+            const products = await Product.findBy('user_id', auth.user?.id)
+            // console.log(products)
             if(!products){
                 return response.status(404).json({
                     status: "failure",
@@ -84,7 +92,7 @@ export default class ProductsController {
         const id = params.id
 
         try{
-            const product = Product.find(id)
+            const product = await Product.find(id)
 
             if(!product){
                 return response.status(404).json({
@@ -110,7 +118,7 @@ export default class ProductsController {
         const id = params.id
 
         try{
-            const product = Product.find(id)
+            const product = await Product.find(id)
 
             if(!product){
                 return response.status(404).json({
@@ -137,11 +145,11 @@ export default class ProductsController {
     public async update({request, response, auth, params}: HttpContextContract){
         const data = await request.validate({
             schema: schema.create({
-                title: schema.string().optional({ trim: true }, [rules.minLength(2)]),
-                desctiption: schema.string().optional({ trim: true }, [rules.minLength(2)]),
-                price: schema.number().optional([rules.unsigned()]),
-                product_category_id: schema.number().optional([rules.unsigned()]),
-                product_sub_category_id: schema.number().optional([rules.unsigned()]),
+                title: schema.string.optional({ trim: true }, [rules.minLength(2)]),
+                description: schema.string.optional({ trim: true }, [rules.minLength(2)]),
+                price: schema.number.optional([rules.unsigned()]),
+                product_category_id: schema.number.optional([rules.unsigned(), rules.exists({table: 'categories', column: 'id'})]),
+                product_sub_category_id: schema.number.optional([rules.unsigned(), rules.exists({table: 'sub_categories', column: 'id'})]),
 
             })
         })
@@ -149,9 +157,22 @@ export default class ProductsController {
         try{
             const id = params.id
 
-            const product = Product.findOrFail(id)
-    
-            await product.merge(data).save()
+            const product = await Product.findBy('id',id)
+
+            if(!product){
+                return response.status(404).json({
+                    status: "failure",
+                    message: "Invalid product id"
+                })
+            }
+            ;(await product).title = data.title || (await product).title
+            ;(await product).description = data.description || (await product).description
+            ;(await product).price = data.price || (await product).price
+            ;(await product).product_category_id = data.product_category_id || (await product).product_category_id
+            ;(await product).product_sub_category_id = data.product_sub_category_id || (await product).product_sub_category_id
+
+            ;(await product).save()
+
     
             return response.json({
                 status: "success",
@@ -161,7 +182,7 @@ export default class ProductsController {
         }catch (error) {
             return response.status(500).json({
               status: 'failure',
-              data: error,
+              error: error,
             })
           }
 

@@ -8,7 +8,7 @@ export default class CategoriesController {
 
        public async  index({request, response, auth}: HttpContextContract){
         try{
-            const categories = Category.all()
+            const categories = await Category.all()
 
             return response.json({
                 status: "success",
@@ -27,7 +27,7 @@ export default class CategoriesController {
     //Get categories created by authenticated user
     public async myCategories({request, response, auth}: HttpContextContract){
         try{
-            const categories = Category.findBy('user_id', auth.user!.id)
+            const categories = await Category.findBy('user_id', auth.user!.id)
             if(!categories){
                 return response.status(404).json({
                     status: "failure",
@@ -53,7 +53,7 @@ export default class CategoriesController {
         const id = params.id
 
         try{
-            const category = Category.find(id)
+            const category = await Category.find(id)
 
             if(!category){
                 return response.status(404).json({
@@ -79,7 +79,7 @@ export default class CategoriesController {
         const id = params.id
 
         try{
-            const category = Category.find(id)
+            const category = await Category.find(id)
 
             if(!category){
                 return response.status(404).json({
@@ -113,7 +113,7 @@ export default class CategoriesController {
         })
 
         try{
-            const category = Category.create(data)
+            const category = await Category.create(data)
 
             return response.status(201).json({
                 status: "success",
@@ -132,7 +132,7 @@ export default class CategoriesController {
     public async update({request, response, auth, params}: HttpContextContract){
         const data = await request.validate({
             schema: schema.create({
-                name: schema.string().optional({ trim: true }, [rules.minLength(2)]),
+                name: schema.string.optional({ trim: true }, [rules.minLength(2)]),
                 status: schema.boolean.optional()
             })
         })
@@ -140,9 +140,12 @@ export default class CategoriesController {
         try{
             const id = params.id
 
-            const category = Category.findOrFail(id)
+            const category = await Category.findOrFail(id)
     
-            await category.merge(data).save()
+            category.name = data.name || category.name
+            category.status = data.status || category.status
+
+            category.save()
     
             return response.json({
                 status: "success",

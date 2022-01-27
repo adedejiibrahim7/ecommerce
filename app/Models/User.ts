@@ -29,7 +29,7 @@ export default class User extends BaseModel {
   public rememberMeToken?: string
 
   @column()
-  public contact_phone: string
+  public contact_number: string
 
   @column()
   public gender: string

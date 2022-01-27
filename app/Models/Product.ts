@@ -17,6 +17,15 @@ export default class Product extends BaseModel {
   @column()
   public price: number
 
+  @column()
+  public user_id: number
+
+  @column()
+  public product_category_id: number
+
+  @column()
+  public product_sub_category_id: number
+
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
 

@@ -13,6 +13,9 @@ export default class SubCategory extends BaseModel {
   @column()
   public status: boolean
 
+  @column()
+  public product_category_id: number
+
   @belongsTo(() => Category)
   public category: BelongsTo<typeof Category>
 

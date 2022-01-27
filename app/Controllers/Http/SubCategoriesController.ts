@@ -55,7 +55,7 @@ export default class SubCategoriesController {
             const id = params.id
     
             try{
-                const subCategory = SubCategory.find(id)
+                const subCategory = await SubCategory.find(id)
     
                 if(!subCategory){
                     return response.status(404).json({
@@ -81,12 +81,12 @@ export default class SubCategoriesController {
             const id = params.id
     
             try{
-                const subCategory = SubCategory.find(id)
+                const subCategory = await SubCategory.find(id)
     
                 if(!subCategory){
                     return response.status(404).json({
                         status: "failure",
-                        message: "Category with specified id does not exist"
+                        message: "SubCategory with specified id does not exist"
                     })
                 }
     
@@ -116,7 +116,11 @@ export default class SubCategoriesController {
             })
     
             try{
-                const subCategory = SubCategory.create(data)
+                const subCategory = await SubCategory.create({
+                    name: data.name,
+                    product_category_id: data.product_category_id,
+                    status: data.status
+                })
     
                 return response.status(201).json({
                     status: "success",
@@ -135,18 +139,20 @@ export default class SubCategoriesController {
         public async update({request, response, auth, params}: HttpContextContract){
             const data = await request.validate({
                 schema: schema.create({
-                    name: schema.string().optional({ trim: true }, [rules.minLength(2)]),
+                    name: schema.string.optional({ trim: true }, [rules.minLength(2)]),
                     status: schema.boolean.optional(),
-                    product_sub_category_id: schema.number.optional([rules.unsigned])
+                    product_category_id: schema.number.optional([rules.unsigned, rules.exists({table: 'categories', column: 'id'})])
                 })
             })
     
             try{
                 const id = params.id
     
-                const subCategory = SubCategory.findOrFail(id)
+                const subCategory = await SubCategory.findOrFail(id)
         
-                await subCategory.merge(data).save()
+                subCategory.name = data.name || subCategory.name
+                subCategory.status = data.status || subCategory.status
+                subCategory.product_category_id = data.product_category_id || subCategory.product_category_id
         
                 return response.json({
                     status: "success",

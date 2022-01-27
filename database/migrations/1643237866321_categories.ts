@@ -7,7 +7,6 @@ export default class Categories extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('name').notNullable()
-      table.integer('product_category_id').unsigned().references('id').inTable('categories').onDelete('CASCADE')
       table.boolean('status').defaultTo(true) //when new category is added, we'd assume it's to be available immediately.
       // table.timestamps(true)
       table.timestamp('created_at', { useTz: true }).notNullable().defaultTo(this.now())

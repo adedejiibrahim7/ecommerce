@@ -8,6 +8,8 @@ export default class SubCategories extends BaseSchema {
       table.increments('id')
       table.string('name').notNullable()
       table.boolean('status').defaultTo(true) //when new category is added, we'd assume it's to be available immediately.
+      table.integer('product_category_id').unsigned().references('id').inTable('categories').onDelete('CASCADE')
+
       // table.timestamps(true)
       table.timestamp('created_at', { useTz: true }).notNullable().defaultTo(this.now())
       table.timestamp('updated_at', { useTz: true }).nullable()
