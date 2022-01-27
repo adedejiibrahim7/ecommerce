@@ -8,6 +8,10 @@
 import Env from '@ioc:Adonis/Core/Env'
 import { OrmConfig } from '@ioc:Adonis/Lucid/Orm'
 import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
+import Url from 'url-parse'
+import Application from '@ioc:Adonis/Core/Application'
+
+const CLEARDB_DATABASE_URL = new Url(Env.get(‘CLEARDB_DATABASE_URL’))
 
 const databaseConfig: DatabaseConfig & { orm: Partial<OrmConfig> } = {
   /*
@@ -34,7 +38,7 @@ const databaseConfig: DatabaseConfig & { orm: Partial<OrmConfig> } = {
     | npm i mysql
     |
     */
-    mysql: {
+    dev: {
       client: 'mysql',
       connection: {
         host: Env.get('MYSQL_HOST'),
@@ -46,7 +50,19 @@ const databaseConfig: DatabaseConfig & { orm: Partial<OrmConfig> } = {
       healthCheck: false,
 			debug: false,
     },
+    mysql: {
+      client: 'mysql',
+      connection: {
+        host: CLEARDB_DATABASE_URL.host as string,
+        port: Number(''),
+        user: CLEARDB_DATABASE_URL.username as string,
+        password: CLEARDB_DATABASE_URL.password as string,
+        database: CLEARDB_DATABASE_URL.pathname.substr(1) as string
+      },
+      healthCheck: false,
+    },
 
+    connection: Application.inDev ? 'dev' : 'mysql' 
   },
 
   /*

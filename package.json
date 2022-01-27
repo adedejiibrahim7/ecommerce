@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:prod": "node ./build/server.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^5.4.1",
@@ -26,6 +27,10 @@
     "phc-bcrypt": "^1.0.7",
     "proxy-addr": "^2.0.7",
     "reflect-metadata": "^0.1.13",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "url-parse": "^1.5.4"
+  },
+  "engines": {
+    "node": "14.17.3"
   }
 }
