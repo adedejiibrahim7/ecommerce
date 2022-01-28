@@ -152,12 +152,14 @@ export default class CategoriesController {
                 message: "Category details updated",
                 data: category
             })
+
         }catch (error) {
             return response.status(500).json({
               status: 'failure',
               data: error,
             })
           }
+
 
     }
 
