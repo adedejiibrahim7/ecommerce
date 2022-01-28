@@ -6,7 +6,7 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 export default class CategoriesController {
        //Get all categories that exist
 
-       public async  index({request, response, auth}: HttpContextContract){
+       public async  index({ response}: HttpContextContract){
         try{
             const categories = await Category.all()
 
@@ -25,7 +25,7 @@ export default class CategoriesController {
     }
 
     //Get categories created by authenticated user
-    public async myCategories({request, response, auth}: HttpContextContract){
+    public async myCategories({ response, auth}: HttpContextContract){
         try{
             const categories = await Category.findBy('user_id', auth.user!.id)
             if(!categories){
@@ -49,7 +49,7 @@ export default class CategoriesController {
         }
     }
 
-    public async get({response, auth, params}: HttpContextContract){
+    public async get({response, params}: HttpContextContract){
         const id = params.id
 
         try{
@@ -75,7 +75,7 @@ export default class CategoriesController {
         }
     }
 
-    public async delete({ response, auth, params }: HttpContextContract){
+    public async delete({ response, params }: HttpContextContract){
         const id = params.id
 
         try{
@@ -103,8 +103,8 @@ export default class CategoriesController {
         }
     }
 
-    public async store({request, response, auth}: HttpContextContract){
-        
+    public async store({request, response}: HttpContextContract){
+
         const data = await request.validate({
             schema: schema.create({
                 name: schema.string({ trim: true }, [rules.minLength(2)]),
@@ -129,7 +129,7 @@ export default class CategoriesController {
         }
     }
 
-    public async update({request, response, auth, params}: HttpContextContract){
+    public async update({request, response, params}: HttpContextContract){
         const data = await request.validate({
             schema: schema.create({
                 name: schema.string.optional({ trim: true }, [rules.minLength(2)]),
@@ -141,12 +141,12 @@ export default class CategoriesController {
             const id = params.id
 
             const category = await Category.findOrFail(id)
-    
+
             category.name = data.name || category.name
             category.status = data.status || category.status
 
             category.save()
-    
+
             return response.json({
                 status: "success",
                 message: "Category details updated",

@@ -45,7 +45,7 @@ export default class ProductsController {
 
     //GEt all products that exist
 
-    public async  index({request, response, auth}: HttpContextContract){
+    public async  index({ response}: HttpContextContract){
         try{
             const products = await Product.all()
 
@@ -65,7 +65,7 @@ export default class ProductsController {
 
     //Get my products (authenticated user (admin))
 
-    public async myProducts({request, response, auth}: HttpContextContract){
+    public async myProducts({ response, auth}: HttpContextContract){
         try{
             const products = await Product.findBy('user_id', auth.user?.id)
             // console.log(products)
@@ -90,7 +90,7 @@ export default class ProductsController {
         }
     }
 
-    public async get({response, auth, params}: HttpContextContract){
+    public async get({response, params}: HttpContextContract){
         const id = params.id
 
         try{
@@ -116,7 +116,7 @@ export default class ProductsController {
         }
     }
 
-    public async delete({ response, auth, params }: HttpContextContract){
+    public async delete({ response, params }: HttpContextContract){
         const id = params.id
 
         try{
@@ -144,7 +144,7 @@ export default class ProductsController {
         }
     }
 
-    public async update({request, response, auth, params}: HttpContextContract){
+    public async update({request, response, params}: HttpContextContract){
         const data = await request.validate({
             schema: schema.create({
                 title: schema.string.optional({ trim: true }, [rules.minLength(2)]),

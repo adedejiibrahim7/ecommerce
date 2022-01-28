@@ -87,7 +87,7 @@ export default class UsersController {
             const token = await auth.use('api').attempt(data.email, data.password, {
               expiresIn: '10 days',
             })
-      
+
             return response.json( {
               status: 'Success',
               data: token,
@@ -103,7 +103,7 @@ export default class UsersController {
 
     public async logout({ auth, response }: HttpContextContract) {
         try {
-          await auth.use('api').revoke()
+          await auth.use('api').logout()
           return response.json({
             status: "success",
             message: 'Successfully logged out',
@@ -116,7 +116,7 @@ export default class UsersController {
         }
     }
 
-    public async update({request, response, auth, params}: HttpContextContract){
+    public async update({request, response, params}: HttpContextContract){
         const data = await request.validate({
             schema: schema.create({
                 first_name: schema.string.optional({ trim: true }, [rules.minLength(2)]),
@@ -130,7 +130,7 @@ export default class UsersController {
             const id = params.id
 
             const user = await User.findOrFail(id)
-    
+
             // await user.merge(data).save()
             ;(await user).first_name = data.first_name || (await user).first_name
             ;(await user).last_name = data.last_name || (await user).last_name
@@ -141,7 +141,7 @@ export default class UsersController {
 
 
             console.log(user)
-    
+
             return response.json({
                 status: "success",
                 message: "User details updated",
