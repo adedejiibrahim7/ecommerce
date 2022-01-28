@@ -38,7 +38,7 @@ const databaseConfig: DatabaseConfig & { orm: Partial<OrmConfig> } = {
     | npm i mysql
     |
     */
-    dev: {
+    mysql: {
       client: 'mysql',
       connection: {
         host: Env.get('MYSQL_HOST'),
@@ -50,7 +50,7 @@ const databaseConfig: DatabaseConfig & { orm: Partial<OrmConfig> } = {
       healthCheck: false,
 			debug: false,
     },
-    mysql: {
+    another: {
       client: 'mysql',
       connection: {
         host: CLEARDB_DATABASE_URL.host as string,
