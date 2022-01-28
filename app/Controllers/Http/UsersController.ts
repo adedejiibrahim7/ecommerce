@@ -102,6 +102,7 @@ export default class UsersController {
     }
 
     public async logout({ auth, response }: HttpContextContract) {
+
         try {
           await auth.use('api').logout()
           return response.json({
