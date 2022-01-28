@@ -12,9 +12,11 @@ export default class ProductsController {
                 price: schema.number([rules.unsigned()]),
                 product_category_id: schema.number([rules.unsigned(), rules.exists({table: 'categories', column: 'id'})]),
                 product_sub_category_id: schema.number([rules.unsigned(), rules.exists({table: 'sub_categories', column: 'id'})]),
-                
+
             })
         })
+
+
 
         try{
             const product = await Product.create({
@@ -173,7 +175,7 @@ export default class ProductsController {
 
             ;(await product).save()
 
-    
+
             return response.json({
                 status: "success",
                 message: "Product details updated",
