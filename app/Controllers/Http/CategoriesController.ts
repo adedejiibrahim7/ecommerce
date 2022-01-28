@@ -153,6 +153,7 @@ export default class CategoriesController {
                 data: category
             })
 
+
         }catch (error) {
             return response.status(500).json({
               status: 'failure',
