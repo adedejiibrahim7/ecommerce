@@ -73,6 +73,7 @@ export default class UsersController {
             })
             console.log(e)
         }
+
     }
 
     public async login({request, response, auth}: HttpContextContract){
