@@ -76,6 +76,7 @@ export default class UsersController {
     }
 
     public async login({request, response, auth}: HttpContextContract){
+
         const data = await request.validate({
             schema: schema.create({
                 email: schema.string({}, [rules.email()]),
