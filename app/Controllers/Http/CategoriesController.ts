@@ -130,6 +130,7 @@ export default class CategoriesController {
     }
 
     public async update({request, response, params}: HttpContextContract){
+
         const data = await request.validate({
             schema: schema.create({
                 name: schema.string.optional({ trim: true }, [rules.minLength(2)]),
