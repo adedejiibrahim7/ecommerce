@@ -121,6 +121,7 @@ export default class CategoriesController {
                 data: category
             })
         }catch(e){
+
             return response.status(500).json({
                 status: "failure",
                 message: "An error occurred",
